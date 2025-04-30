@@ -12,8 +12,19 @@ const JacketRecommendation = () => {
             const { latitude, longitude } = position.coords;
             try {
                 const weatherData = await fetchWeatherData(latitude, longitude);
-                const feelsLike = weatherData?.main?.feels_like;
-                const hasRain = weatherData?.rain != null;
+
+                // Access data from the 'current' object in the Open-Meteo response
+                const feelsLike = weatherData?.current?.apparent_temperature;
+
+                // Open-Meteo provides rain as a numerical value (e.g., mm/hour).
+                // To check if it's currently raining, check if the value is greater than 0.
+                // Also check if the 'rain' property exists.
+                const currentRainAmount = weatherData?.current?.rain;
+                const hasRain = currentRainAmount != null && currentRainAmount > 0; // Check if rain value exists and is positive
+
+                console.log("weather data:", weatherData);
+                // const feelsLike = weatherData?.main?.feels_like;
+                // const hasRain = weatherData?.rain != null;
 
                 let jacketRecommendation = ""; // Default
                 let needJacketResponse = "YES";
